@@ -1,0 +1,8 @@
+.vscode/
+__pycache__/
+
+ENV/
+static/images/products/
+
+secrets.py
+tasks.txt

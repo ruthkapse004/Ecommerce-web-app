@@ -1,0 +1,124 @@
+{% extends 'store/main.html' %}
+{% load static %}
+{% block content %}
+<div class="row">
+    <div class="col-lg-6">
+        <div class="box-element">
+            <a class="btn btn-outline-dark" href="{% url 'cart' %}">&#8592; Back to Cart</a>
+            <br><br>
+
+            <h3 style="margin-left: 5px;">Order Summary</h3>
+            <hr>
+            <div>
+                <h5 class="left-text"><strong>Items: {{order.get_order_items}}</strong></h5>
+                <h5 class="right-text"><strong>Order Total: ₹{{order.get_order_total | floatformat:2}}</strong></h5>
+            </div>
+            <hr>
+            
+            <div class="cart-row">
+                <div style="flex:2"></div>
+                <div style="flex:2"><strong>Product</strong></div>
+                <div style="flex:1"><strong>Price</strong></div>
+                <div style="flex:1"><strong>Quantity</strong></div>
+            </div>
+            {% for item in items %}
+                <div class="cart-row">
+                    <div style="flex:2"><img class="row-image" src="{{item.product.image_url}}" ></div>
+                    <div style="flex:2"><p>{{item.product}}</p></div>
+                    <div style="flex:1"><p>₹{{item.product.price | floatformat:2}}</p></div>
+                    <div style="flex:1"><p>x{{item.quantity}}</p></div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="box-element" id="form-wrapper">
+            <p style="margin-left: 5px;"><strong>Shipping Information</strong></p>
+            
+            <form id="form">
+                <div id="shipping-info">
+                    <div class="form-field">
+                        <label for="address">Address:</label>
+                        <input required class="form-control" type="text" name="address" placeholder="Address">
+                    </div>
+                    <div class="form-field">
+                        <label for="city">City:</label>
+                        <input required class="form-control" type="text" name="city" placeholder="City">
+                    </div>
+                    <div class="form-field">
+                        <label for="state">State:</label>
+                        <input required class="form-control" type="text" name="state" placeholder="State">
+                    </div>
+                    <div class="form-field">
+                        <label for="zipcode">Zipcode:</label>
+                        <input required class="form-control" type="text" name="zipcode" placeholder="Zipcode">
+                    </div>
+                </div>
+                <hr>
+                <input value="Proceed to Pay" id="form-button" class="btn btn-success btn-block" disabled type="submit">
+            </form>
+        </div>
+        <br>
+        
+        <div class="box-element hidden" id="payment-info">
+            <strong>Payment Options: </strong>
+            <button class="btn btn-outline-success" id="make-payment">Make Payment</button>
+        </div>
+    </div>
+</div>
+
+<script type = "text/javascript">
+    let total = "{{order.get_order_total | floatformat:2}}"
+    let emptyCart = !parseInt("{{order.get_order_items}}")
+
+    let form = document.getElementById("form")
+    let formButton = document.getElementById("form-button")
+
+    if(!emptyCart) {
+        formButton.disabled = false
+    }
+
+    form.addEventListener("submit", function(e) {
+        e.preventDefault()
+        console.log("Form Submitting.")
+
+        formButton.classList.add("hidden")
+        document.getElementById("payment-info").classList.remove("hidden")
+    })
+
+    document.getElementById("make-payment").addEventListener("click", function(e) {
+        submitFormData()
+    })
+
+    function submitFormData() {
+        let formShippingData = {
+            "address" : form.address.value,
+            "city" : form.city.value,
+            "state" : form.state.value,
+            "zipcode" : form.zipcode.value,
+        }
+        console.log("Shipping Info: ", formShippingData)
+
+        const url = "/place_order/"
+        fetch(url, {
+            method:"POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": csrftoken,
+            },
+            body: JSON.stringify({
+                "formShippingData": formShippingData,
+            })
+        })
+        .then((response) => {
+            return response.json()
+        })
+        .then((data) => {
+            setCookie("cart")
+            alert(data)
+            window.location.href = "{% url 'store' %}"
+        })
+    }
+</script>
+{% endblock content %}

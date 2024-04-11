@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+    {% load static %}
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <link rel="icon" type="image/x-icon" href="{% static '/images/shopcart.png' %}">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+        
+        <title>Sign In</title>
+    </head>
+
+    <body style="margin-top:50px;">
+        <div>
+            <img id="icon" src="{% static '/images/shopcart.png' %}">
+            <br>
+        </div>
+        <div class="form-box">
+            <div class="box-element col-3">
+                <h4 class="middle-text"><strong>Sign In</strong></h4>
+                
+                <div class="gap"></div>
+                {% for message in messages %}
+                    <div class="alert alert-{{message.tags}}" role="alert">
+                        {{message}}
+                    </div>
+                {% endfor %}
+                
+                <form id="create-cart" action="/signin/" method="post">
+                    {% csrf_token %}
+                    <input required class="form-control" type="username" name="username" placeholder="Username">
+                    <br>
+                    <input required class="form-control" type="password" name="password" placeholder="Password">
+                    <br>              
+                    <button class="btn btn-success btn-block" type="submit">Sign In</button>
+                </form>
+                
+                <div class="gap"></div>
+                <div class="sub-text">
+                    <a class="left-text" href="{% url 'reset_password' %}">Forgot password?</a>
+                    <a class="right-text" href="{% url 'signup' %}">Don't have an account?</a>
+                </div>
+            </div>
+        </div>
+    </body>  
+</html>

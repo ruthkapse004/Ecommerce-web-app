@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+    {% load static %}
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <link rel="icon" type="image/x-icon" href="{% static '/images/shopcart.png' %}">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+        
+        <title>Sign Up</title>
+    </head>
+
+    <body style="margin-top:30px;">
+        <div>
+            <img id="icon" src="{% static '/images/shopcart.png' %}">
+            <br>
+        </div>
+        <div class="form-box">
+            <div class="box-element col-4">
+                <h4 class="middle-text"><strong>Sign Up</strong></h4>
+
+                <div class="gap"></div>
+                {% for message in messages %}
+                    <div class="alert alert-{{message.tags}}" role="alert">
+                        {{message}}
+                    </div>
+                {% endfor %}
+
+                <form id="form" action="/signup/" method="post">
+                    {% csrf_token %}
+                    <input required class="form-control" type="text" name="first_name" placeholder="First Name">
+                    <br>
+                    <input required class="form-control" type="text" name="last_name" placeholder="Last Name">
+                    <br>
+                    <input required class="form-control" type="email" name="email" placeholder="Email">
+                    <br>
+                    <input required class="form-control" type="tel" name="phone" placeholder="Phone No">
+                    <br>
+                    <input required class="form-control" type="username" name="username" placeholder="Username">
+                    <br>
+                    <input required class="form-control" type="password" name="password" placeholder="Password">
+                    <br>
+                    <input required class="form-control" type="password" name="cnf_password" placeholder="Confirm Password">
+                    <br>
+                    <button class="btn btn-success btn-block" type="submit">Sign Up</button>
+                    <div class="gap"></div>
+                    <button type="reset" class="btn btn-link right-text sub-text">Clear form</button>
+                </form>
+
+                <div class="gap"></div>
+                <div class="left-text sub-text">
+                    Already have an account?
+                    <a href="{% url 'signin' %}">Sign in</a>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
